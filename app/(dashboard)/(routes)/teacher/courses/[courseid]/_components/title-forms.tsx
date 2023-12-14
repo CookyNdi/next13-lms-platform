@@ -5,6 +5,8 @@ import axios from 'axios';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Pencil } from 'lucide-react';
+import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -25,6 +27,7 @@ const formSchema = z.object({
 
 export default function TitleForms({ courseId, initialData }: TitleFormsProps) {
   const [isEditing, setIsEditing] = useState(false);
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -35,7 +38,14 @@ export default function TitleForms({ courseId, initialData }: TitleFormsProps) {
 
   const toggleEdit = () => setIsEditing((current) => !current);
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+    try {
+      await axios.patch(`/api/courses/${courseId}`, values);
+      toast.success('Course updated');
+      toggleEdit();
+      router.refresh();
+    } catch {
+      toast.error('Something went wrong');
+    }
   };
   return (
     <div className='mt-6 boder bg-slate-100 rounded-md p-4'>
