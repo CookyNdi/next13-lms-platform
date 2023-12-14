@@ -5,7 +5,9 @@ import { redirect } from 'next/navigation';
 
 import { db } from '@/lib/db';
 import { IconBadge } from '@/components/icon-badge';
+
 import TitleForms from './_components/title-forms';
+import DescriptionForms from './_components/desctiption-forms';
 
 const CourseIdPage = async ({ params }: { params: { courseId: string } }) => {
   const { userId } = auth();
@@ -42,6 +44,7 @@ const CourseIdPage = async ({ params }: { params: { courseId: string } }) => {
             <h2 className='text-xl'>Customize your course</h2>
           </div>
           <TitleForms initialData={course} courseId={course.id} />
+          <DescriptionForms initialData={course} courseId={course.id} />
         </div>
       </div>
     </div>
